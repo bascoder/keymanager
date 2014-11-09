@@ -1,13 +1,16 @@
 package nl.bascoder.keymanager;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -19,32 +22,50 @@ import javax.swing.table.AbstractTableModel;
  * @since 9-11-14
  * @version 1.0 - creation
  */
-public class DatabaseTableModel extends AbstractTableModel {
+public class DatabaseTableModel extends AbstractTableModel implements AutoCloseable {
 
     private DatabaseManager dbManager;
     private ResultSetMetaData resultSetMetaData;
     private final List<Row> rows;
+    private Connection c;
 
     public DatabaseTableModel() {
         this.dbManager = DatabaseManager.getInstance();
         rows = new ArrayList<>();
 
         initResultSet();
-
-        new SwingWorker<Void, Row>() {
-            public Void doInBackground() {
-                // TODO: Process ResultSet and create Rows.  Call publish() for every N rows created.
-                return null;
-            }
-
-            protected void process(Row... chunks) {
-                // TODO: Add to ResultSetTableModel List and fire TableEvent.
-            }
-        }.execute();
     }
 
     private void initResultSet() {
-        dbManager.getConnection();
+        //try (Connection c = dbManager.getConnection()) {
+
+        try {
+            c = dbManager.getConnection();
+            final String sql = String.format(Locale.US,
+                    "SELECT k.id, k.license_key, k.in_use, d.id," +
+                            " d.name, o.id AS own_id, o.name " +
+                            "FROM key k " +
+                            "INNER JOIN device d ON k.device_id = d.id " +
+                            "INNER JOIN owner o ON d.owner_id = o.id");
+            PreparedStatement stat = c.prepareStatement(sql);
+            ResultSet s = stat.executeQuery();
+            this.resultSetMetaData = s.getMetaData();
+
+            while(s.next()) {
+                Object[] values = new Object[7];
+                values[0] = s.getLong(1);
+                values[1] = s.getString(2);
+                values[2] = s.getBoolean(3);
+                values[3] = s.getLong(4);
+                values[4] = s.getString(5);
+                values[5] = s.getLong(6);
+                values[6] = s.getString(7);
+
+                rows.add(new Row(values));
+            }
+        } catch (SQLException e) {
+            Logger.getGlobal().severe(e.getMessage());
+        }
     }
 
     /**
@@ -90,7 +111,7 @@ public class DatabaseTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         try {
-            return resultSetMetaData.getColumnName(columnIndex - 1);
+            return resultSetMetaData.getColumnName(columnIndex + 1);
         } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage() + " " + e.getErrorCode(), e);
             return null;
@@ -141,6 +162,13 @@ public class DatabaseTableModel extends AbstractTableModel {
         return rows.get(rowIndex)
                 .getValue(columnIndex);
     }
+
+
+    @Override
+    public void close() throws Exception {
+        c.close();
+    }
+
 
     /**
      * Internal used row

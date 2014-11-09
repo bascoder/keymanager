@@ -1,5 +1,6 @@
 package nl.bascoder.keymanager.gui;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -23,7 +24,12 @@ public class MainWindow {
         this.tblContent.setModel(new DatabaseTableModel());
     }
 
-    public void listKeys() {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("MainWindow");
+        frame.setContentPane(new MainWindow().panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
 

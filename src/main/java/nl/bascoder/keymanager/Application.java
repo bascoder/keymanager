@@ -1,5 +1,7 @@
 package nl.bascoder.keymanager;
 
+import nl.bascoder.keymanager.gui.MainWindow;
+
 /**
  * @author Bas van Marwijk
  * @since 9-11-14
@@ -7,7 +9,8 @@ package nl.bascoder.keymanager;
  */
 public class Application {
 
-    public static void main(String args) {
+    public static void main(String [] args) {
+        new MainWindow();
     }
 }
 

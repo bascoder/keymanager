@@ -1,5 +1,7 @@
 package nl.bascoder.keymanager;
 
+import org.sqlite.SQLiteJDBCLoader;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,12 +17,15 @@ public class DatabaseManager {
     private static final String DATABASE_CONNECTION_DRIVER = "org.sqlite.JDBC";
     private static final String CONNECTION_URL = "jdbc:sqlite:keys.db";
 
-    private Connection connection;
-
-    private DatabaseManager() throws ExceptionInInitializerError{
+    private DatabaseManager() throws ExceptionInInitializerError {
+        Connection tryConnection = null;
         try {
+            System.setProperty("sqlite.purejava", "true");
             Class.forName(DATABASE_CONNECTION_DRIVER);
-            connection = DriverManager.getConnection(CONNECTION_URL);
+            tryConnection = DriverManager.getConnection(CONNECTION_URL);
+
+            System.out.println(String.format("running in %s mode", SQLiteJDBCLoader.isNativeMode() ? "native" : "pure-java"));
+
         } catch (ClassNotFoundException e) {
             Logger.getGlobal().severe("Database connection driver not found: "
                     + DATABASE_CONNECTION_DRIVER);
@@ -29,6 +34,14 @@ public class DatabaseManager {
             //TODO filter error for database not existing
             Logger.getGlobal().severe("Could not connect with database: "
                     + CONNECTION_URL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                tryConnection.close();
+            } catch (Exception e) {
+                System.err.print("Could not close connection");
+            }
         }
     }
 
@@ -39,17 +52,17 @@ public class DatabaseManager {
         return instance;
     }
 
-    public synchronized Connection getConnection() {
-        return connection;
-    }
-
-    public synchronized void closeConnection() {
+    public synchronized Connection getConnection() throws SQLException {
         try {
-            connection.close();
-            instance = null;
+            return DriverManager.getConnection(CONNECTION_URL);
         } catch (SQLException e) {
-            Logger.getGlobal().severe("Could not close database");
+            //TODO filter error for database not existing
+            Logger.getGlobal().severe("Could not connect with database: "
+                    + CONNECTION_URL);
+            throw e;
         }
     }
+
+
 }
 
