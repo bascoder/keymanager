@@ -1,6 +1,7 @@
 package nl.bascoder.keymanager.gui;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import nl.bascoder.keymanager.DatabaseTableModel;
@@ -20,11 +22,13 @@ import nl.bascoder.keymanager.DatabaseTableModel;
  */
 public class MainWindow {
 
+    private final Window mWindow;
     private JTable tblContent;
     private JPanel panel1;
     private JButton mBtnAdd;
 
     public MainWindow() {
+        mWindow = SwingUtilities.windowForComponent(panel1);
         initTable();
         initBtn();
     }
@@ -44,7 +48,7 @@ public class MainWindow {
     }
 
     private void initBtn() {
-        mBtnAdd.addActionListener(e -> new NewKey(panel1));
+        mBtnAdd.addActionListener(e -> new NewKeyDialog(mWindow));
     }
 
     public static void main(String[] args) {

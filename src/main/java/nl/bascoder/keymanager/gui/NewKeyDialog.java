@@ -4,7 +4,9 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -31,7 +33,7 @@ import nl.bascoder.keymanager.entity.Device;
 import nl.bascoder.keymanager.entity.Key;
 import nl.bascoder.keymanager.entity.Owner;
 
-public class NewKey extends JDialog {
+public class NewKeyDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -41,27 +43,29 @@ public class NewKey extends JDialog {
     private JCheckBox mChkInUse;
     private JTextField txtNewOwner;
     private JTextField mTxtNewDevice;
-    private JComponent mParent;
+    private Component mParent;
     private DatabaseManager mDbManager;
     private ConnectionSource mConnection;
     private Owner mNewOwner;
     private Device mNewDevice;
 
-    public NewKey(JComponent parent) {
+    public NewKeyDialog(Window parent) {
+        super(parent);
         this.mParent = parent;
         mDbManager = DatabaseManager.getInstance();
         init();
     }
 
     private void init() {
+        setModalityType(ModalityType.DOCUMENT_MODAL);
         setTitle("Add a new key");
-        setVisible(true);
+
         setContentPane(contentPane);
-        setModal(true);
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(mParent);
         getRootPane().setDefaultButton(buttonOK);
 
+        setVisible(true);
         setButtonHandlers();
         initComponents();
     }
