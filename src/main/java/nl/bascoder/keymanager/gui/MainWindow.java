@@ -16,6 +16,8 @@ import javax.swing.WindowConstants;
 import nl.bascoder.keymanager.DatabaseTableModel;
 
 /**
+ * MainWindow shows keys and ability to add keys.
+ *
  * @author Bas van Marwijk
  * @since 9-11-14
  * @version 1.0 - creation

@@ -3,6 +3,7 @@ package nl.bascoder.keymanager.gui;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
+import com.sun.istack.internal.Nullable;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -33,6 +36,13 @@ import nl.bascoder.keymanager.entity.Device;
 import nl.bascoder.keymanager.entity.Key;
 import nl.bascoder.keymanager.entity.Owner;
 
+/**
+ * New Key Dialog is a Dialog to add new keys to the db.
+ * It automatically creates new owners and devices if created.
+ *
+ * @author Bas
+ * @since 7/6/2015
+ */
 public class NewKeyDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -49,6 +59,11 @@ public class NewKeyDialog extends JDialog {
     private Owner mNewOwner;
     private Device mNewDevice;
 
+    /**
+     * Creates instance of Dialog and binds to parent
+     *
+     * @param parent parent window to bind to
+     */
     public NewKeyDialog(Window parent) {
         super(parent);
         this.mParent = parent;
@@ -142,25 +157,43 @@ public class NewKeyDialog extends JDialog {
     }
 
     private void addNewOwner() {
+        final String name = txtNewOwner.getText();
         try {
             Dao<Owner, Integer> ownerDao = DaoManager.createDao(mConnection, Owner.class);
-            mNewOwner.setName(txtNewOwner.getText());
+
+            mNewOwner.setName(name);
 
             ownerDao.create(mNewOwner);
         } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not add new owner", e);
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                showErrorDialog("There is already an owner named " + name, "Duplicate name");
+                mNewOwner.setName("");
+            } else {
+                showErrorDialog("Could not add owner", "error");
+            }
+
         }
     }
 
     private void addNewDevice() {
+        final String name = mTxtNewDevice.getText();
         try {
             Dao<Device, Integer> deviceDao = DaoManager.createDao(mConnection, Device.class);
-            mNewDevice.setName(mTxtNewDevice.getText());
+
+            mNewDevice.setName(name);
             mNewDevice.setOwner(getSelectedOwner());
 
             deviceDao.create(mNewDevice);
         } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not add new device", e);
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                showErrorDialog("There is already a device named: " + name
+                                + ". Device names must be unique",
+                        "Duplicated device");
+            } else {
+                showErrorDialog("Could not save new device. Please consult the error logs", null);
+            }
         }
     }
 
@@ -177,6 +210,8 @@ public class NewKeyDialog extends JDialog {
         } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not add key to db", e);
             Logger.getGlobal().log(Level.SEVERE, e.getCause().toString());
+            showErrorDialog("Could not add key to the database, please consult the error logs",
+                    "Could not save key");
         }
     }
 
@@ -198,6 +233,7 @@ public class NewKeyDialog extends JDialog {
             model.addElement(mNewOwner);
         } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, "Can't connect to db", e);
+            showErrorDialog("Could not fetch owners from the database", null);
         }
     }
 
@@ -219,6 +255,17 @@ public class NewKeyDialog extends JDialog {
 
         }
         addDevicesToComboBox(devices);
+    }
+
+    /**
+     * Show error message to user
+     *
+     * @param message message to display
+     * @param title   title to display
+     */
+    private void showErrorDialog(String message, @Nullable String title) {
+        JOptionPane.showConfirmDialog(this, message, title,
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
     }
 
     private Owner getSelectedOwner() {
