@@ -14,9 +14,9 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Key {
     @DatabaseField(generatedId = true)
     private long id;
-    @DatabaseField
+    @DatabaseField(columnName = "license_key")
     private String licenseKey;
-    @DatabaseField
+    @DatabaseField(columnName = "in_use")
     private boolean inUse;
     @DatabaseField(foreign = true, canBeNull = false)
     private Device device;

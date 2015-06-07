@@ -2,6 +2,7 @@ package nl.bascoder.keymanager.gui;
 
 import java.awt.Dimension;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,9 +20,11 @@ public class MainWindow {
 
     private JTable tblContent;
     private JPanel panel1;
+    private JButton mBtnAdd;
 
     public MainWindow() {
         initTable();
+        initBtn();
     }
 
     private void initTable() {
@@ -35,6 +38,10 @@ public class MainWindow {
                     JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    private void initBtn() {
+        mBtnAdd.addActionListener(e -> new NewKey(panel1));
     }
 
     public static void main(String[] args) {
