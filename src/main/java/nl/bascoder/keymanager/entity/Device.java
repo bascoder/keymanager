@@ -22,7 +22,7 @@ public class Device {
      *
      * @return Value for property 'id'.
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 

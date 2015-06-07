@@ -26,7 +26,7 @@ public class Key {
      *
      * @return Value for property 'id'.
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
