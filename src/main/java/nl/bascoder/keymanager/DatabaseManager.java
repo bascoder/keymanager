@@ -1,5 +1,8 @@
 package nl.bascoder.keymanager;
 
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+
 import org.sqlite.SQLiteJDBCLoader;
 
 import java.sql.Connection;
@@ -50,6 +53,15 @@ public class DatabaseManager {
             instance = new DatabaseManager();
         }
         return instance;
+    }
+
+    /**
+     * Returns ConnectionSource object for ormlite
+     * @return ConnectionSource for ormlite
+     * @throws SQLException if a error occured with SQL
+     */
+    public ConnectionSource getConnectionSource() throws SQLException {
+        return new JdbcConnectionSource(CONNECTION_URL);
     }
 
     public synchronized Connection getConnection() throws SQLException {

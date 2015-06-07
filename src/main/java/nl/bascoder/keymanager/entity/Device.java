@@ -1,13 +1,20 @@
 package nl.bascoder.keymanager.entity;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * @author Bas van Marwijk
- * @since 9-11-14
  * @version 1.0 - creation
+ * @since 9-11-14
  */
+@DatabaseTable(tableName = "device")
 public class Device {
+    @DatabaseField(generatedId = true)
     private long id;
+    @DatabaseField
     private String name;
+    @DatabaseField(foreign = true, canBeNull = false)
     private Owner owner;
 
     /**
@@ -62,6 +69,11 @@ public class Device {
      */
     public void setOwner(Owner owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
 

@@ -1,16 +1,24 @@
 package nl.bascoder.keymanager.entity;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Entity containing license licenseKey.
  *
  * @author Bas van Marwijk
- * @since 9-11-14
  * @version 1.0 - creation
+ * @since 9-11-14
  */
+@DatabaseTable(tableName = "key")
 public class Key {
+    @DatabaseField(generatedId = true)
     private long id;
+    @DatabaseField
     private String licenseKey;
+    @DatabaseField
     private boolean inUse;
+    @DatabaseField(foreign = true, canBeNull = false)
     private Device device;
 
     /**
@@ -83,6 +91,11 @@ public class Key {
      */
     public void setDevice(Device device) {
         this.device = device;
+    }
+
+    @Override
+    public String toString() {
+        return licenseKey;
     }
 }
 
