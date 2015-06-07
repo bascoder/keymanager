@@ -52,6 +52,24 @@ public class Owner {
     }
 
     @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Owner owner = (Owner) o;
+
+        return id == owner.id && name.equals(owner.name);
+
+    }
+
+    @Override
     public String toString() {
         return name;
     }
