@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "owner")
 public class Owner {
     @DatabaseField(generatedId = true)
-    private long id;
+    private int id;
     @DatabaseField
     private String name;
 
@@ -29,7 +29,7 @@ public class Owner {
      *
      * @param id Value to set for property 'id'.
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

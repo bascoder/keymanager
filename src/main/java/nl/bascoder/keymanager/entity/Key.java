@@ -13,7 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "key")
 public class Key {
     @DatabaseField(generatedId = true)
-    private long id;
+    private int id;
     @DatabaseField(columnName = "license_key")
     private String licenseKey;
     @DatabaseField(columnName = "in_use")
@@ -35,7 +35,7 @@ public class Key {
      *
      * @param id Value to set for property 'id'.
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "device")
 public class Device {
     @DatabaseField(generatedId = true)
-    private long id;
+    private int id;
     @DatabaseField
     private String name;
     @DatabaseField(foreign = true, canBeNull = false)
@@ -31,7 +31,7 @@ public class Device {
      *
      * @param id Value to set for property 'id'.
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
