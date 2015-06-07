@@ -1,6 +1,8 @@
 package nl.bascoder.keymanager.gui;
 
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +33,7 @@ public class MainWindow {
         try {
             this.tblContent.setModel(new DatabaseTableModel());
         } catch(Exception e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not create model", e);
             JOptionPane.showConfirmDialog(panel1,
                     "Failed to access database",
                     "DB Error",
