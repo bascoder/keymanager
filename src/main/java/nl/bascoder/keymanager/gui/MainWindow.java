@@ -1,5 +1,7 @@
 package nl.bascoder.keymanager.gui;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,16 +28,26 @@ public class MainWindow {
         try {
             this.tblContent.setModel(new DatabaseTableModel());
         } catch(Exception e) {
-            JOptionPane.showConfirmDialog(panel1, "Failed to access database");
+            JOptionPane.showConfirmDialog(panel1,
+                    "Failed to access database",
+                    "DB Error",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
     public static void main(String[] args) {
+        initJFrame();
+    }
+
+    private static void initJFrame() {
         JFrame frame = new JFrame("Key Manager");
         frame.setContentPane(new MainWindow().panel1);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setMinimumSize(new Dimension(600, 200));
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
