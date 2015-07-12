@@ -1,7 +1,11 @@
 keymanager
 ==========
 
-Key manager for license keys
+Key manager for license keys.
+
+First checkout
+==========
+- Run database_creation.sql to generate keys.db with SQLite
 
 TODO
 ==========
