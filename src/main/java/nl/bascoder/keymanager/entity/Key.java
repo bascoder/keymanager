@@ -97,5 +97,27 @@ public class Key {
     public String toString() {
         return licenseKey;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Key)) return false;
+
+        Key key = (Key) o;
+
+        if (id != key.id) return false;
+        if (inUse != key.inUse) return false;
+        if (licenseKey != null ? !licenseKey.equals(key.licenseKey) : key.licenseKey != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (licenseKey != null ? licenseKey.hashCode() : 0);
+        result = 31 * result + (inUse ? 1 : 0);
+        return result;
+    }
 }
 
