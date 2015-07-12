@@ -43,7 +43,7 @@ public class KeyTestCase {
         try {
             mKeyDao.delete(mKey);
         } catch (Exception e) {
-            Logger.getGlobal().log(Level.WARNING, "Could not clean up owner", e);
+            Logger.getGlobal().log(Level.WARNING, "Could not clean up key", e);
         }
     }
 

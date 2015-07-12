@@ -4,10 +4,10 @@ package nl.bascoder.keymanager.test.orm;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
-
-import org.junit.Assert;
-
+import nl.bascoder.keymanager.DatabaseManager;
+import nl.bascoder.keymanager.entity.Owner;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,9 +15,6 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import nl.bascoder.keymanager.DatabaseManager;
-import nl.bascoder.keymanager.entity.Owner;
 
 /**
  * Created by Bas on 7-6-2015.

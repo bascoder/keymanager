@@ -75,5 +75,26 @@ public class Device {
     public String toString() {
         return name;
     }
-}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Device)) return false;
+
+        Device device = (Device) o;
+
+        if (id != device.id) return false;
+        if (name != null ? !name.equals(device.name) : device.name != null) return false;
+        if (owner != null ? !owner.equals(device.owner) : device.owner != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        return result;
+    }
+}
